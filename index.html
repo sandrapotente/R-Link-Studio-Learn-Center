@@ -739,6 +739,7 @@ nav.nav{display:none !important}
 .rs-tb-search > .ico{position:absolute;left:13px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--t-4);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none}
 .rs-tb-search .kbd{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:3px;pointer-events:none}
 .rs-tb-search .kbd span{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:5px;padding:2px 6px;font-size:10.5px;font-weight:600;color:var(--t-3);font-family:inherit;line-height:1.2}
+#navDD{top:calc(100% + 8px);left:0;right:0;max-height:min(480px,calc(100dvh - var(--NH) - 24px))}
 
 .rs-tb-right{display:flex;align-items:center;gap:14px;margin-left:auto;flex-shrink:0}
 
@@ -1018,6 +1019,85 @@ nav.nav{display:none !important}
 :root[data-theme="light"] .art-card,
 :root[data-theme="light"] .rs-stat,
 :root[data-theme="light"] .hc-participant-cta{}
+
+/* ============================================================
+   PHONE LAYOUT
+   The top bar fits a phone, the hub headline wraps, and an
+   article page opens on the article itself: the category menu
+   moves into a drawer opened from the bar above the article.
+   ============================================================ */
+.rs-tb-signup-short{display:none}
+.cv-mbar,.cv-sl-head,.cv-scrim{display:none}
+
+@media(max-width:980px){
+  /* Top bar on phones (either way up) and tablets: the search field gives up width instead of pushing the buttons off screen */
+  .rs-tb-search{min-width:0}
+  .rs-tb-search input{text-overflow:ellipsis}
+  /* Its results open under the bar at the full screen width, not squeezed to the field */
+  #navDD{position:fixed;top:calc(var(--NH) + 8px);left:12px;right:12px}
+  .search-dd-title{white-space:normal}
+  /* One theme button: it shows the mode a tap switches to */
+  :root[data-theme="dark"] .theme-dark-pill,:root[data-theme="light"] .theme-light-pill{display:none}
+}
+
+@media(max-width:780px){
+  .rs-tb-search input{padding-right:12px}
+
+  /* Article pages: a sticky bar above the article opens the category menu */
+  .cv-mbar{position:sticky;top:var(--NH);z-index:150;display:flex;align-items:center;gap:12px;width:100%;min-height:54px;margin:0;padding:8px 14px 8px 16px;border:0;border-bottom:1px solid var(--bd-soft);background:color-mix(in oklab,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);color:var(--t-2);font:inherit;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .cv-mbar:focus-visible{outline:2px solid #a64dff;outline-offset:-2px}
+  .cv-mbar-ico{flex:0 0 auto;width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+  .cv-mbar-text{flex:1;min-width:0;display:flex;align-items:baseline;gap:8px}
+  .cv-mbar-cat{min-width:0;font-family:'Raleway',sans-serif;font-size:14.5px;font-weight:800;color:var(--t-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cv-mbar-art{flex:0 0 auto;font-size:12px;font-weight:600;color:var(--t-4);white-space:nowrap}
+  .cv-mbar-more{flex:0 0 auto;padding:7px 13px;border-radius:999px;background:rgba(166,77,255,.16);border:1px solid rgba(166,77,255,.34);color:#e2ccff;font-size:12px;font-weight:700;letter-spacing:.01em;transition:transform .15s,background .15s}
+  .cv-mbar:hover .cv-mbar-more{background:rgba(166,77,255,.26)}
+  .cv-mbar:active .cv-mbar-more{transform:scale(.95)}
+  :root[data-theme="light"] .cv-mbar-more{background:#f3eaff;border-color:#dcc4ff;color:#5a189a}
+
+  /* The category menu becomes a drawer from the left */
+  /* Closed, it sits off screen and hc-app.js makes it inert, so nothing in it can be reached */
+  .cv-sl{position:fixed;top:0;bottom:0;left:0;z-index:400;width:min(330px,88vw);height:auto;padding:0 12px calc(28px + env(safe-area-inset-bottom,0px));border-right:1px solid var(--bd-soft);border-bottom:0;background:var(--bg);box-shadow:none;overflow-y:auto;overscroll-behavior:contain;transform:translateX(-102%);transition:transform .3s cubic-bezier(.32,.72,0,1),box-shadow .3s}
+  .cv-menu-open .cv-sl{transform:none;box-shadow:24px 0 60px -12px rgba(0,0,0,.55)}
+  .cv-sl-head{position:sticky;top:0;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 -12px 16px;padding:calc(12px + env(safe-area-inset-top,0px)) 12px 12px 20px;background:var(--bg);border-bottom:1px solid var(--bd-soft);font-family:'Raleway',sans-serif;font-size:15px;font-weight:800;color:var(--t-1)}
+  .cv-sl-close{width:40px;height:40px;display:grid;place-items:center;border:1px solid var(--bd);border-radius:10px;background:transparent;color:var(--t-2);cursor:pointer;transition:background .15s,transform .15s}
+  .cv-sl-close:hover{background:rgba(166,77,255,.12)}
+  .cv-sl-close:active{transform:scale(.94)}
+  .cv-sl-close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round}
+  .cv-scrim{display:block;position:fixed;inset:0;z-index:390;background:rgba(2,6,23,.55);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);animation:cv-scrim-in .2s ease-out}
+  .cv-scrim[hidden]{display:none}
+  html.cv-menu-open,html.cv-menu-open body{overflow:hidden}
+  .cv-main{padding-top:26px}
+}
+@keyframes cv-scrim-in{from{opacity:0}}
+
+@media(max-width:640px){
+  /* Hub headline wraps instead of running off both edges */
+  .hero h1{white-space:normal;text-wrap:balance;font-size:clamp(30px,9vw,40px);line-height:1.08}
+  .search-pill input{padding:0 18px 0 50px}
+  .search-pill .s-kbd{display:none}
+  /* All suggestion chips stay reachable */
+  .search-chips{flex-wrap:wrap;overflow:visible}
+}
+
+@media(max-width:560px){
+  .rs-topbar{gap:8px;padding:0 12px}
+  .rs-tb-right{gap:8px}
+  .rs-tb-signup{padding:0 11px}
+  .rs-tb-signup-full{display:none}
+  .rs-tb-signup-short{display:inline}
+}
+
+/* Touch screens have no keyboard shortcuts, so the shortcut hints go */
+@media(hover:none) and (pointer:coarse){
+  .rs-tb-search .kbd,.search-dd-foot{display:none}
+  .rs-tb-search input{padding-right:12px}
+}
+
+@media(prefers-reduced-motion:reduce){
+  .cv-sl,.cv-menu-open .cv-sl{transition:none}
+  .cv-scrim{animation:none}
+}
 </style>
 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png"/><link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png"/><link rel="apple-touch-icon" href="/apple-touch-icon.png"/></head>
 <body>
@@ -1045,9 +1125,9 @@ nav.nav{display:none !important}
     <div id="navBreadcrumb" hidden aria-hidden="true"></div>
     <div class="rs-tb-search">
       <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input id="navSearch" type="text" placeholder="Search articles…" autocomplete="off"/>
+      <input id="navSearch" type="text" placeholder="Search articles…" aria-label="Search help articles" autocomplete="off" enterkeyhint="search"/>
       <div class="kbd"><span>⌘</span><span>K</span></div>
-      <div class="search-dd" id="navDD" style="top:calc(100% + 8px);left:0;right:0;width:100%"></div>
+      <div class="search-dd" id="navDD"></div>
     </div>
     <div class="rs-tb-right">
       <a class="rs-tb-status" href="#status" id="statusLink" aria-label="System status — all systems operational" title="All systems operational">
@@ -1058,7 +1138,8 @@ nav.nav{display:none !important}
         </span>
       </a>
       <a class="rs-tb-signup" href="https://r-link.com/pricing" target="_blank" rel="noopener" id="signupLink" aria-label="Try R-Link Studio">
-        <span>Try R-Link Studio</span>
+        <span class="rs-tb-signup-full">Try R-Link Studio</span>
+        <span class="rs-tb-signup-short" aria-hidden="true">Try R-Link</span>
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/><path d="M13 5l7 7-7 7"/></svg>
       </a>
       <div class="rs-tb-themetoggle" id="themeToggle" role="button" tabindex="0" aria-label="Toggle light or dark mode">
@@ -1088,7 +1169,7 @@ nav.nav{display:none !important}
     <div class="search-wrap">
       <div class="search-pill">
         <svg class="s-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input id="heroSearch" type="text" placeholder="Search across all articles, categories, and topics…" autocomplete="off"/>
+        <input id="heroSearch" type="text" placeholder="Search across all articles, categories, and topics…" aria-label="Search help articles" autocomplete="off" enterkeyhint="search"/>
         <span class="s-kbd">/</span>
       </div>
       <div class="search-dd" id="heroDD" style="top:calc(100% + 8px);left:0;right:0"></div>
@@ -1197,11 +1278,21 @@ nav.nav{display:none !important}
 
 <!-- CATEGORY VIEW -->
 <div id="cat-view" hidden>
+  <!-- Phones: the article comes first; this bar opens the category menu as a drawer -->
+  <button class="cv-mbar" id="cvMenuBtn" type="button" aria-controls="cvSidebar" aria-expanded="false">
+    <svg class="cv-mbar-ico" viewBox="0 0 24 24" aria-hidden="true"><line x1="4" y1="7" x2="20" y2="7"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="17" x2="14" y2="17"/></svg>
+    <span class="cv-mbar-text">
+      <span class="cv-mbar-cat" id="cvMbarCat"></span>
+      <span class="cv-mbar-art" id="cvMbarArt"></span>
+    </span>
+    <span class="cv-mbar-more">Browse</span>
+  </button>
   <div class="cv-layout">
-    <aside class="cv-sl" id="cvSidebar"></aside>
+    <aside class="cv-sl" id="cvSidebar" aria-label="Help articles"></aside>
     <main class="cv-main" id="cvMain"></main>
     <aside class="cv-toc" id="cvToc"></aside>
   </div>
+  <div class="cv-scrim" id="cvScrim" hidden></div>
 </div>
 
 <!-- TWEAKS PANEL -->
@@ -1278,7 +1369,7 @@ nav.nav{display:none !important}
 <script src="src/article-bodies.js?v=63"></script>
 <script src="screenshots-data.js?v=14"></script>
 <link rel="stylesheet" href="src/src-content.css?v=5">
-<script src="hc-app.js?v=20"></script>
+<script src="hc-app.js?v=21"></script>
 </body>
 </html>
 
